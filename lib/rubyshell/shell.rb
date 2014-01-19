@@ -69,9 +69,25 @@ module RubyShell
     private :which
 
 		# Run the interactive shell using readline.
+    # Read multiple lines if it looks like mutliline code
 		def run
+      @ends_needed = 0
 			loop do
-				cmd = Readline.readline('rubyshell> ')
+        cmd = Readline.readline('rubyshell> ')
+        check_multiline(cmd)
+				# cmd = Readline.readline('rubyshell> ')
+        # if cmd =~ /do/ or cmd =~ /^def/ or cmd =~ /^class/ or cmd =~ /^module/
+        #   @ends_needed = 1
+        #   cmd << ';' << Readline.readline('rubyshell>> ')
+        #   if cmd =~ /end$/
+        #     @ends_needed -= 1
+        #     if @ends_needed > 0
+        #       cmd << ';' << Readline.readline('rubyshell>> ')
+        #     end
+        #   else
+
+        #   end
+        # end
 
 				finish if cmd.nil? or cmd == 'exit'
 				next if cmd == ""
@@ -80,6 +96,25 @@ module RubyShell
 				execute(cmd)
 			end
 		end
+    
+    # Add additional lines to the command string if it looks like multiline Ruby
+    # Currently the @ends_needed logic is off-by-1:
+    #   (should be > 0 not > 1) but works that way.
+    def check_multiline(cmd)
+      if cmd =~ /do/ or cmd =~ /^def/ or cmd =~ /^class/ or cmd =~ /^module/
+        @ends_needed += 1
+        cmd << ';' << Readline.readline('rubyshell>> ')
+        if cmd =~ /end$/
+          @ends_needed -= 1
+          if @ends_needed > 1
+            cmd << ';' << Readline.readline('rubyshell>> ')
+          end
+        else
+          check_multiline(cmd)
+        end
+      end
+    end
+    private :check_multiline
 
 		# Save history to ~/.rubyshell/history when the shell exists.
 		def finish
