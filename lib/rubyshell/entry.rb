@@ -1,8 +1,8 @@
-# Rush::Entry is the base class for Rush::File and Rush::Dir.  One or more of
+# RubyShell::Entry is the base class for RubyShell::File and RubyShell::Dir.  One or more of
 # these is instantiated whenever you use square brackets to access the
 # filesystem on a box, as well as any other operation that returns an entry or
 # list of entries.
-class Rush::Entry
+class RubyShell::Entry
 	attr_reader :box, :name, :path
 
 	# Initialize with full path to the file or dir, and the box it resides on.
@@ -10,18 +10,18 @@ class Rush::Entry
 		full_path = ::File.expand_path(full_path, '/')
 		@path = ::File.dirname(full_path)
 		@name = ::File.basename(full_path)
-		@box = box || Rush::Box.new('localhost')
+		@box = box || RubyShell::Box.new('localhost')
 	end
 
 	# The factory checks to see if the full path has a trailing slash for
-	# creating a Rush::Dir rather than the default Rush::File.
+	# creating a RubyShell::Dir rather than the default RubyShell::File.
 	def self.factory(full_path, box=nil)
 		if full_path.tail(1) == '/'
-			Rush::Dir.new(full_path, box)
+			RubyShell::Dir.new(full_path, box)
 		elsif File.directory?(full_path)
-			Rush::Dir.new(full_path, box)
+			RubyShell::Dir.new(full_path, box)
 		else
-			Rush::File.new(full_path, box)
+			RubyShell::File.new(full_path, box)
 		end
 	end
 
@@ -38,12 +38,12 @@ class Rush::Entry
 	end
 
 	def connection
-		box ? box.connection : Rush::Connection::Local.new
+		box ? box.connection : RubyShell::Connection::Local.new
 	end
 
 	# The parent dir.  For example, box['/etc/hosts'].parent == box['etc/']
 	def parent
-		@parent ||= Rush::Dir.new(@path)
+		@parent ||= RubyShell::Dir.new(@path)
 	end
 
 	def full_path
@@ -51,14 +51,14 @@ class Rush::Entry
 	end
 
 	def quoted_path
-		Rush.quote(full_path)
+		RubyShell.quote(full_path)
 	end
 
 	# Return true if the entry currently exists on the filesystem of the box.
 	def exists?
 		stat
 		true
-	rescue Rush::DoesNotExist
+	rescue RubyShell::DoesNotExist
 		false
 	end
 
@@ -95,7 +95,7 @@ class Rush::Entry
 	# will not be affected, but a new object representing the newly-created
 	# entry will be returned.
 	def duplicate(new_name)
-		raise Rush::NameCannotContainSlash if new_name.match(/\//)
+		raise RubyShell::NameCannotContainSlash if new_name.match(/\//)
 		new_full_path = "#{@path}/#{new_name}"
 		connection.copy(full_path, new_full_path)
 		self.class.new(new_full_path, box)
@@ -104,7 +104,7 @@ class Rush::Entry
 	# Copy the entry to another dir.  Returns an object representing the new
 	# copy.
 	def copy_to(dir)
-		raise Rush::NotADir unless dir.class == Rush::Dir
+		raise RubyShell::NotADir unless dir.class == RubyShell::Dir
 
 		if box == dir.box
 			connection.copy(full_path, dir.full_path)
@@ -153,7 +153,7 @@ class Rush::Entry
 	#   dir.access = { :user => 'adam', :group => 'users', :read_write_execute => :user_group }
 	#
 	def access=(options)
-		connection.set_access(full_path, Rush::Access.parse(options))
+		connection.set_access(full_path, RubyShell::Access.parse(options))
 	end
 
 	# Returns a hash with up to nine values, combining user/group/other with read/write/execute.
@@ -165,7 +165,7 @@ class Rush::Entry
 	#   entry.access[:other_can_read]  # -> true or nil
 	#
 	def access
-		Rush::Access.new.from_octal(stat[:mode]).display_hash
+		RubyShell::Access.new.from_octal(stat[:mode]).display_hash
 	end
 
 	# Destroy the entry.  If it is a dir, everything inside it will also be destroyed.

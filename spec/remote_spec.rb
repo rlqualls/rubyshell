@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::Connection::Local do
+describe RubyShell::Connection::Local do
 	before do
-		@sandbox_dir = "/tmp/rush_spec.#{Process.pid}"
+		@sandbox_dir = "/tmp/rubyshell_spec.#{Process.pid}"
 		system "rm -rf #{@sandbox_dir}; mkdir -p #{@sandbox_dir}"
 
-		@con = Rush::Connection::Remote.new('spec.example.com')
+		@con = RubyShell::Connection::Remote.new('spec.example.com')
 	end
 
 	after do
@@ -103,24 +103,24 @@ describe Rush::Connection::Local do
 	end
 
 	it "an http result code of 401 raises NotAuthorized" do
-		lambda { @con.process_result("401", "") }.should raise_error(Rush::NotAuthorized)
+		lambda { @con.process_result("401", "") }.should raise_error(RubyShell::NotAuthorized)
 	end
 
 	it "an http result code of 400 raises the exception passed in the result body" do
-		@con.stub!(:parse_exception).and_return(Rush::DoesNotExist, "message")
-		lambda { @con.process_result("400", "") }.should raise_error(Rush::DoesNotExist)
+		@con.stub!(:parse_exception).and_return(RubyShell::DoesNotExist, "message")
+		lambda { @con.process_result("400", "") }.should raise_error(RubyShell::DoesNotExist)
 	end
 
 	it "an http result code of 501 (or anything other than the other defined codes) raises FailedTransmit" do
-		lambda { @con.process_result("501", "") }.should raise_error(Rush::FailedTransmit)
+		lambda { @con.process_result("501", "") }.should raise_error(RubyShell::FailedTransmit)
 	end
 
 	it "parse_exception takes the class from the first line and the message from the second" do
-		@con.parse_exception("Rush::DoesNotExist\nthe message\n").should == [ Rush::DoesNotExist, "the message" ]
+		@con.parse_exception("RubyShell::DoesNotExist\nthe message\n").should == [ RubyShell::DoesNotExist, "the message" ]
 	end
 
 	it "parse_exception rejects unrecognized exceptions" do
-		lambda { @con.parse_exception("NotARushException\n") }.should raise_error
+		lambda { @con.parse_exception("NotARubyShellException\n") }.should raise_error
 	end
 
 	it "passes through ensure_tunnel" do

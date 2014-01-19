@@ -2,18 +2,18 @@ require 'fileutils'
 require 'yaml'
 require 'timeout'
 
-# Rush::Box uses a connection object to execute all rush commands.  If the box
-# is local, Rush::Connection::Local is created.  The local connection is the
+# RubyShell::Box uses a connection object to execute all rush commands.  If the box
+# is local, RubyShell::Connection::Local is created.  The local connection is the
 # heart of rush's internals.  (Users of the rush shell or library need never
 # access the connection object directly, so the docs herein are intended for
 # developers wishing to modify rush.)
 #
 # The local connection has a series of methods which do the actual work of
-# modifying files, getting process lists, and so on.  RushServer creates a
+# modifying files, getting process lists, and so on.  RubyShellServer creates a
 # local connection to handle incoming requests; the translation from a raw hash
 # of parameters to an executed method is handled by
-# Rush::Connection::Local#receive.
-class Rush::Connection::Local
+# RubyShell::Connection::Local#receive.
+class RubyShell::Connection::Local
 	# Write raw bytes to a file.
 	def write_file(full_path, contents)
 		::File.open(full_path, 'w') do |f|
@@ -34,7 +34,7 @@ class Rush::Connection::Local
 	def file_contents(full_path)
 		::File.read(full_path)
 	rescue Errno::ENOENT
-		raise Rush::DoesNotExist, full_path
+		raise RubyShell::DoesNotExist, full_path
 	end
 
 	# Destroy a file or dir.
@@ -62,10 +62,10 @@ class Rush::Connection::Local
 
 	# Rename an entry within a dir.
 	def rename(path, name, new_name)
-		raise(Rush::NameCannotContainSlash, "#{path} rename #{name} to #{new_name}") if new_name.match(/\//)
+		raise(RubyShell::NameCannotContainSlash, "#{path} rename #{name} to #{new_name}") if new_name.match(/\//)
 		old_full_path = "#{path}/#{name}"
 		new_full_path = "#{path}/#{new_name}"
-		raise(Rush::NameAlreadyExists, "#{path} rename #{name} to #{new_name}") if ::File.exists?(new_full_path)
+		raise(RubyShell::NameAlreadyExists, "#{path} rename #{name} to #{new_name}") if ::File.exists?(new_full_path)
 		FileUtils.mv(old_full_path, new_full_path)
 		true
 	end
@@ -75,21 +75,21 @@ class Rush::Connection::Local
 		FileUtils.cp_r(src, dst)
 		true
 	rescue Errno::ENOENT
-		raise Rush::DoesNotExist, File.dirname(dst)
+		raise RubyShell::DoesNotExist, File.dirname(dst)
 	rescue RuntimeError
-		raise Rush::DoesNotExist, src
+		raise RubyShell::DoesNotExist, src
 	end
 
 	# Create an in-memory archive (tgz) of a file or dir, which can be
 	# transmitted to another server for a copy or move.  Note that archive
 	# operations have the dir name implicit in the archive.
 	def read_archive(full_path)
-		`cd #{Rush.quote(::File.dirname(full_path))}; tar c #{Rush.quote(::File.basename(full_path))}`
+		`cd #{RubyShell.quote(::File.dirname(full_path))}; tar c #{RubyShell.quote(::File.basename(full_path))}`
 	end
 
 	# Extract an in-memory archive to a dir.
 	def write_archive(archive, dir)
-		IO.popen("cd #{Rush::quote(dir)}; tar x", "w") do |p|
+		IO.popen("cd #{RubyShell::quote(dir)}; tar x", "w") do |p|
 			p.write archive
 		end
 	end
@@ -112,7 +112,7 @@ class Rush::Connection::Local
 		end
 		dirs.sort + files.sort
 	rescue Errno::ENOENT
-		raise Rush::DoesNotExist, base_path
+		raise RubyShell::DoesNotExist, base_path
 	end
 
 	# Fetch stats (size, ctime, etc) on an entry.  Size will not be accurate for dirs.
@@ -126,7 +126,7 @@ class Rush::Connection::Local
 			:mode => s.mode
 		}
 	rescue Errno::ENOENT
-		raise Rush::DoesNotExist, full_path
+		raise RubyShell::DoesNotExist, full_path
 	end
 
 	def set_access(full_path, access)
@@ -136,7 +136,7 @@ class Rush::Connection::Local
 	# Fetch the size of a dir, since a standard file stat does not include the
 	# size of the contents.
 	def size(full_path)
-		`du -sb #{Rush.quote(full_path)}`.match(/(\d+)/)[1].to_i
+		`du -sb #{RubyShell.quote(full_path)}`.match(/(\d+)/)[1].to_i
 	end
 
 	# Get the list of processes as an array of hashes.
@@ -191,7 +191,7 @@ class Rush::Connection::Local
 	end
 
 	# Read a single file in /proc and store the parsed values in a hash suitable
-	# for use in the Rush::Process#new.
+	# for use in the RubyShell::Process#new.
 	def read_proc_file(file)
 		stat_contents = ::File.read(file)
 		stat_contents.gsub!(/\((.*)\)/, "")
@@ -232,7 +232,7 @@ class Rush::Connection::Local
 	end
 
 	# Parse a single line of the ps command and return the values in a hash
-	# suitable for use in the Rush::Process#new.
+	# suitable for use in the RubyShell::Process#new.
 	def parse_ps(line)
 		m = line.split(" ", 6)
 		params = {}
@@ -327,7 +327,7 @@ class Rush::Connection::Local
 		retval = sh.status
 		sh.close!
 
-		raise(Rush::BashFailed, err) if retval != 0
+		raise(RubyShell::BashFailed, err) if retval != 0
 
 		out
 	end
@@ -365,10 +365,10 @@ class Rush::Connection::Local
 
 	####################################
 
-	# Raised when the action passed in by RushServer is not known.
+	# Raised when the action passed in by RubyShellServer is not known.
 	class UnknownAction < Exception; end
 
-	# RushServer uses this method to transform a hash (:action plus parameters
+	# RubyShellServer uses this method to transform a hash (:action plus parameters
 	# specific to that action type) into a method call on the connection.  The
 	# returned value must be text so that it can be transmitted across the wire
 	# as an HTTP response.
@@ -386,7 +386,7 @@ class Rush::Connection::Local
 			when 'write_archive'  then write_archive(params[:payload], params[:dir])
 			when 'index'          then index(params[:base_path], params[:glob]).join("\n") + "\n"
 			when 'stat'           then YAML.dump(stat(params[:full_path]))
-			when 'set_access'     then set_access(params[:full_path], Rush::Access.from_hash(params))
+			when 'set_access'     then set_access(params[:full_path], RubyShell::Access.from_hash(params))
 			when 'size'           then size(params[:full_path])
 			when 'processes'      then YAML.dump(processes)
 			when 'process_alive'  then process_alive(params[:pid]) ? '1' : '0'

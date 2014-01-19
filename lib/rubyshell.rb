@@ -1,11 +1,9 @@
-require 'rubygems'
-
-# The top-level Rush module has some convenience methods for accessing the
+# The top-level RubyShell module has some convenience methods for accessing the
 # local box.
-module Rush
+module RubyShell
 	# Access the root filesystem of the local box.  Example:
 	#
-	#   Rush['/etc/hosts'].contents
+	#   RubyShell['/etc/hosts'].contents
 	#
 	def self.[](key)
 		box[key]
@@ -13,7 +11,7 @@ module Rush
 
 	# Create a dir object from the path of a provided file.  Example:
 	#
-	#   Rush.dir(__FILE__).files
+	#   RubyShell.dir(__FILE__).files
 	#
 	def self.dir(filename)
 		box[::File.expand_path(::File.dirname(filename)) + '/']
@@ -22,21 +20,21 @@ module Rush
 	# Create a dir object based on the shell's current working directory at the
 	# time the program was run.  Example:
 	#
-	#   Rush.launch_dir.files
+	#   RubyShell.launch_dir.files
 	#
 	def self.launch_dir
 		box[::Dir.pwd + '/']
 	end
 
 	# Run a bash command in the root of the local machine.  Equivalent to
-	# Rush::Box.new.bash.
+	# RubyShell::Box.new.bash.
 	def self.bash(command, options={})
 		box.bash(command, options)
 	end
 
 	# Pull the process list for the local machine.  Example:
    #
-   #   Rush.processes.filter(:cmdline => /ruby/)
+   #   RubyShell.processes.filter(:cmdline => /ruby/)
 	#
 	def self.processes
 		box.processes
@@ -44,7 +42,7 @@ module Rush
 
 	# Get the process object for this program's PID.  Example:
    #
-   #   puts "I'm using #{Rush.my_process.mem} blocks of memory"
+   #   puts "I'm using #{RubyShell.my_process.mem} blocks of memory"
 	#
 	def self.my_process
 		box.processes.filter(:pid => ::Process.pid).first
@@ -52,7 +50,7 @@ module Rush
 
 	# Create a box object for localhost.
 	def self.box
-		@@box = Rush::Box.new
+		@@box = RubyShell::Box.new
 	end
 
 	# Quote a path for use in backticks, say.
@@ -61,27 +59,27 @@ module Rush
 	end
 end
 
-module Rush::Connection; end
+module RubyShell::Connection; end
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
-require 'rush/exceptions'
-require 'rush/config'
-require 'rush/commands'
-require 'rush/access'
-require 'rush/entry'
-require 'rush/file'
-require 'rush/dir'
-require 'rush/search_results'
-require 'rush/head_tail'
-require 'rush/find_by'
-require 'rush/string_ext'
-require 'rush/fixnum_ext'
-require 'rush/array_ext'
-require 'rush/process'
-require 'rush/process_set'
-require 'rush/local'
-require 'rush/remote'
-require 'rush/ssh_tunnel'
-require 'rush/box'
-require 'rush/embeddable_shell'
+require 'rubyshell/exceptions'
+require 'rubyshell/config'
+require 'rubyshell/commands'
+require 'rubyshell/access'
+require 'rubyshell/entry'
+require 'rubyshell/file'
+require 'rubyshell/dir'
+require 'rubyshell/search_results'
+require 'rubyshell/head_tail'
+require 'rubyshell/find_by'
+require 'rubyshell/string_ext'
+require 'rubyshell/fixnum_ext'
+require 'rubyshell/array_ext'
+require 'rubyshell/process'
+require 'rubyshell/process_set'
+require 'rubyshell/local'
+require 'rubyshell/remote'
+require 'rubyshell/ssh_tunnel'
+require 'rubyshell/box'
+require 'rubyshell/embeddable_shell'

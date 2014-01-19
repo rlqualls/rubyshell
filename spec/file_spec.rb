@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::File do
+describe RubyShell::File do
 	before do
-		@sandbox_dir = "/tmp/rush_spec.#{Process.pid}"
+		@sandbox_dir = "/tmp/rubyshell_spec.#{Process.pid}"
 		system "rm -rf #{@sandbox_dir}; mkdir -p #{@sandbox_dir}"
 
 		@filename = "#{@sandbox_dir}/test_file"
@@ -10,15 +10,15 @@ describe Rush::File do
 		system "echo #{@contents} > #{@filename}"
 		@contents += "\n"
 
-		@file = Rush::File.new(@filename)
+		@file = RubyShell::File.new(@filename)
 	end
 
 	after do
 		system "rm -rf #{@sandbox_dir}"
 	end
 
-	it "is a child of Rush::Entry" do
-		@file.should be_kind_of(Rush::Entry)
+	it "is a child of RubyShell::Entry" do
+		@file.should be_kind_of(RubyShell::Entry)
 	end
 
 	it "is not a dir" do
@@ -26,7 +26,7 @@ describe Rush::File do
 	end
 
 	it "can create itself as a blank file, and return itself" do
-		create_me = Rush::File.new("#{@sandbox_dir}/create_me")
+		create_me = RubyShell::File.new("#{@sandbox_dir}/create_me")
 		create_me.create.should == create_me
 		File.exists?("#{@sandbox_dir}/create_me").should == true
 	end
@@ -74,10 +74,10 @@ describe Rush::File do
 	end
 
 	it "can fetch contents or blank if doesn't exist" do
-		Rush::File.new('/does/not/exist').contents_or_blank.should == ""
+		RubyShell::File.new('/does/not/exist').contents_or_blank.should == ""
 	end
 
 	it "can fetch lines, or empty if doesn't exist" do
-		Rush::File.new('/does/not/exist').lines_or_empty.should == []
+		RubyShell::File.new('/does/not/exist').lines_or_empty.should == []
 	end
 end

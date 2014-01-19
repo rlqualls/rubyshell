@@ -1,22 +1,22 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::Dir do
+describe RubyShell::Dir do
 	before do
-		@sandbox_dir = "/tmp/rush_spec.#{Process.pid}"
+		@sandbox_dir = "/tmp/rubyshell_spec.#{Process.pid}"
 		system "rm -rf #{@sandbox_dir}; mkdir -p #{@sandbox_dir}"
 
 		@dirname = "#{@sandbox_dir}/test_dir/"
 		system "mkdir -p #{@dirname}"
 
-		@dir = Rush::Dir.new(@dirname)
+		@dir = RubyShell::Dir.new(@dirname)
 	end
 
 	after do
 		system "rm -rf #{@sandbox_dir}"
 	end
 
-	it "is a child of Rush::Entry" do
-		@dir.should be_kind_of(Rush::Entry)
+	it "is a child of RubyShell::Entry" do
+		@dir.should be_kind_of(RubyShell::Entry)
 	end
 
 	it "can create itself, returning itself" do
@@ -50,12 +50,12 @@ describe Rush::Dir do
 
 	it "lists files" do
 		@dir.create_file('a')
-		@dir.files.should == [ Rush::File.new("#{@dirname}/a") ]
+		@dir.files.should == [ RubyShell::File.new("#{@dirname}/a") ]
 	end
 
 	it "lists dirs" do
 		system "mkdir -p #{@dir.full_path}/b"
-		@dir.dirs.should == [ Rush::Dir.new("#{@dirname}/b") ]
+		@dir.dirs.should == [ RubyShell::Dir.new("#{@dirname}/b") ]
 	end
 
 	it "lists combined files and dirs" do
@@ -85,7 +85,7 @@ describe Rush::Dir do
 	end
 
 	it "[] can return a file that has yet to be created" do
-		@dir['not_yet'].class.should == Rush::File
+		@dir['not_yet'].class.should == RubyShell::File
 	end
 
 	it "makes a list of entries from an array of filenames" do

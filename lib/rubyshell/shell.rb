@@ -1,17 +1,17 @@
 require 'readline'
 
-# Rush::Shell is used to create an interactive shell.  It is invoked by the rush binary.
-module Rush
+# RubyShell::Shell is used to create an interactive shell.  It is invoked by the rush binary.
+module RubyShell
 	class Shell
 		attr_accessor :suppress_output
 		# Set up the user's environment, including a pure binding into which
 		# env.rb and commands.rb are mixed.
 		def initialize
-			root = Rush::Dir.new('/')
-			home = Rush::Dir.new(ENV['HOME']) if ENV['HOME']
-			pwd = Rush::Dir.new(ENV['PWD']) if ENV['PWD']
+			root = RubyShell::Dir.new('/')
+			home = RubyShell::Dir.new(ENV['HOME']) if ENV['HOME']
+			pwd = RubyShell::Dir.new(ENV['PWD']) if ENV['PWD']
 
-			@config = Rush::Config.new
+			@config = RubyShell::Config.new
 
 			@config.load_history.each do |item|
 				Readline::HISTORY.push(item)
@@ -21,14 +21,14 @@ module Rush
 			Readline.completion_append_character = nil
 			Readline.completion_proc = completion_proc
 
-			@box = Rush::Box.new
+			@box = RubyShell::Box.new
 			@pure_binding = @box.instance_eval "binding"
 			$last_res = nil
 
 			eval @config.load_env, @pure_binding
 
 			commands = @config.load_commands
-			Rush::Dir.class_eval commands
+			RubyShell::Dir.class_eval commands
 			Array.class_eval commands
 		end
 
@@ -38,7 +38,7 @@ module Rush
 			$last_res = res
 			eval("_ = $last_res", @pure_binding)
 			print_result res
-		rescue Rush::Exception => e
+		rescue RubyShell::Exception => e
 			puts "Exception #{e.class} -> #{e.message}"
 		rescue ::Exception => e
 			puts "Exception #{e.class} -> #{e.message}"
@@ -60,19 +60,19 @@ module Rush
 			end
 		end
 
-		# Save history to ~/.rush/history when the shell exists.
+		# Save history to ~/.rubyshell/history when the shell exists.
 		def finish
 			@config.save_history(Readline::HISTORY.to_a)
 			puts
 			exit
 		end
 
-		# Nice printing of different return types, particularly Rush::SearchResults.
+		# Nice printing of different return types, particularly RubyShell::SearchResults.
 		def print_result(res)
 			return if self.suppress_output
 			if res.kind_of? String
 				puts res
-			elsif res.kind_of? Rush::SearchResults
+			elsif res.kind_of? RubyShell::SearchResults
 				widest = res.entries.map { |k| k.full_path.length }.max
 				res.entries_with_lines.each do |entry, lines|
 					print entry.full_path
@@ -140,7 +140,7 @@ module Rush
 			full_path = eval("#{possible_var}.full_path", @pure_binding) rescue nil
 			box = eval("#{possible_var}.box", @pure_binding) rescue nil
 			if full_path and box
-				Rush::Dir.new(full_path, box).entries.select do |e|
+				RubyShell::Dir.new(full_path, box).entries.select do |e|
 					e.name.match(/^#{Regexp.escape(partial_path)}/)
 				end.map do |e|
 					(pre || '') + original_var + accessor + quote + fixed_path + e.name + (e.dir? ? "/" : "")

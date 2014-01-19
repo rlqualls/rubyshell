@@ -1,11 +1,10 @@
-require 'rubygems'
 require 'mongrel'
 require 'base64'
 
 # Mongrel handler that translates the incoming HTTP request into a
-# Rush::Connection::Local call.  The results are sent back across the wire to
-# be decoded by Rush::Connection::Remote on the other side.
-class RushHandler < Mongrel::HttpHandler
+# RubyShell::Connection::Local call.  The results are sent back across the wire to
+# be decoded by RubyShell::Connection::Remote on the other side.
+class RubyShellHandler < Mongrel::HttpHandler
 	def process(request, response)
 		params = {}
 		request.params['QUERY_STRING'].split("?").last.split("&").each do |tuple|
@@ -35,7 +34,7 @@ class RushHandler < Mongrel::HttpHandler
 				response.start(200) do |head, out|
 					out.write result
 				end
-			rescue Rush::Exception => e
+			rescue RubyShell::Exception => e
 				response.start(400) do |head, out|
 					out.write "#{e.class}\n#{e.message}\n"
 				end
@@ -68,11 +67,11 @@ class RushHandler < Mongrel::HttpHandler
 	end
 
 	def box
-		@box ||= Rush::Box.new('localhost')
+		@box ||= RubyShell::Box.new('localhost')
 	end
 
 	def config
-		@config ||= Rush::Config.new
+		@config ||= RubyShell::Config.new
 	end
 
 	def log(msg)
@@ -83,12 +82,12 @@ class RushHandler < Mongrel::HttpHandler
 end
 
 # A container class to run the Mongrel server for rushd.
-class RushServer
+class RubyShellServer
 	def run
 		host = "127.0.0.1"
-		port = Rush::Config::DefaultPort
+		port = RubyShell::Config::DefaultPort
 
-		rushd = RushHandler.new
+		rushd = RubyShellHandler.new
 		rushd.log "rushd listening on #{host}:#{port}"
 
 		h = Mongrel::HttpServer.new(host, port)

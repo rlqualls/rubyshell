@@ -1,6 +1,6 @@
 # Internal class for managing an ssh tunnel, across which relatively insecure
-# HTTP commands can be sent by Rush::Connection::Remote.
-class Rush::SshTunnel
+# HTTP commands can be sent by RubyShell::Connection::Remote.
+class RubyShell::SshTunnel
 	def initialize(real_host)
 		@real_host = real_host
 	end
@@ -26,7 +26,7 @@ class Rush::SshTunnel
 	def setup_everything(options={})
 		display "Connecting to #{@real_host}..."
 		push_credentials
-		launch_rushd
+		launch_rubyshelld
 		establish_tunnel(options)
 	end
 
@@ -37,15 +37,15 @@ class Rush::SshTunnel
 	end
 
 	def ssh_append_to_credentials(string)
-		# the following horror is exactly why rush is needed
-		passwords_file = "~/.rush/passwords"
+		# the following horror is exactly why rubyshell is needed
+		passwords_file = "~/.rubyshell/passwords"
 		string = "'#{string}'"
-		ssh "M=`grep #{string} #{passwords_file} 2>/dev/null | wc -l`; if [ $M = 0 ]; then mkdir -p .rush; chmod 700 .rush; echo #{string} >> #{passwords_file}; chmod 600 #{passwords_file}; fi"
+		ssh "M=`grep #{string} #{passwords_file} 2>/dev/null | wc -l`; if [ $M = 0 ]; then mkdir -p .rubyshell; chmod 700 .rubyshell; echo #{string} >> #{passwords_file}; chmod 600 #{passwords_file}; fi"
 	end
 
-	def launch_rushd
-		display "Launching rushd"
-		ssh("if [ `ps aux | grep rushd | grep -v grep | wc -l` -ge 1 ]; then exit; fi; rushd > /dev/null 2>&1 &")
+	def launch_rubyshelld
+		display "Launching rubyshelld"
+		ssh("if [ `ps aux | grep rubyshelld | grep -v grep | wc -l` -ge 1 ]; then exit; fi; rubyshelld > /dev/null 2>&1 &")
 	end
 
 	def establish_tunnel(options={})
@@ -64,7 +64,7 @@ class Rush::SshTunnel
 	def tunnel_options
 		{
 			:local_port => @port,
-			:remote_port => Rush::Config::DefaultPort,
+			:remote_port => RubyShell::Config::DefaultPort,
 			:ssh_host => @real_host,
 		}
 	end
@@ -109,11 +109,11 @@ class Rush::SshTunnel
 	end
 
 	def next_available_port
-		(config.tunnels.values.max || Rush::Config::DefaultPort) + 1
+		(config.tunnels.values.max || RubyShell::Config::DefaultPort) + 1
 	end
 
 	def config
-		@config ||= Rush::Config.new
+		@config ||= RubyShell::Config.new
 	end
 
 	def display(msg)

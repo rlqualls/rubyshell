@@ -1,8 +1,8 @@
-# An instance of this class is returned by Rush::Commands#search.  It contains
+# An instance of this class is returned by RubyShell::Commands#search.  It contains
 # both the list of entries which matched the search, as well as the raw line
 # matches.  These methods get equivalent functionality to "grep -l" and "grep -h".
 #
-# SearchResults mixes in Rush::Commands so that you can chain multiple searches
+# SearchResults mixes in RubyShell::Commands so that you can chain multiple searches
 # or do file operations on the resulting entries.
 #
 # Examples:
@@ -10,7 +10,7 @@
 #   myproj['**/*.rb'].search(/class/).entries.size
 #   myproj['**/*.rb'].search(/class/).lines.size
 #   myproj['**/*.rb'].search(/class/).copy_to other_dir
-class Rush::SearchResults
+class RubyShell::SearchResults
 	attr_reader :entries, :lines, :entries_with_lines, :pattern
 
 	# Make a blank container.  Track the pattern so that we can colorize the
@@ -24,7 +24,7 @@ class Rush::SearchResults
 		@lines = []
 	end
 
-	# Add a Rush::Entry and the array of string matches.
+	# Add a RubyShell::Entry and the array of string matches.
 	def add(entry, lines)
 		# this assumes that entry is unique
 		@entries << entry
@@ -32,7 +32,7 @@ class Rush::SearchResults
 		@lines += lines
 	end
 
-	include Rush::Commands
+	include RubyShell::Commands
 
 	def each(&block)
 		@entries.each(&block)

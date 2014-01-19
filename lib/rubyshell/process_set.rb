@@ -5,7 +5,7 @@
 #
 #   processes.filter(:cmdline => /mongrel_rails/).kill
 #
-class Rush::ProcessSet
+class RubyShell::ProcessSet
 	attr_reader :processes
 
 	def initialize(processes)
@@ -20,7 +20,7 @@ class Rush::ProcessSet
 	#   processes.filter(:uid => 501, :cmdline => /ruby/)
 	#
 	def filter(conditions)
-		Rush::ProcessSet.new(
+		RubyShell::ProcessSet.new(
 			processes.select do |p|
 				conditions.all? do |key, value|
 					value.class == Regexp ?

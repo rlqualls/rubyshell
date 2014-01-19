@@ -1,8 +1,6 @@
-require 'rubygems'
-require 'spec'
-
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
-require 'rush'
+require 'rspec'
+require 'rubyshell'
 
 def mock_config(&block)
 	mock_config_start
@@ -16,7 +14,7 @@ end
 
 def mock_config_start
 	mock_config_cleanup
-	Rush::Config.new(mock_config_sandbox_dir)
+	RubyShell::Config.new(mock_config_sandbox_dir)
 end
 
 def mock_config_cleanup

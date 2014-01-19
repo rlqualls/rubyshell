@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::Box do
+describe RubyShell::Box do
 	before do
-		@sandbox_dir = "/tmp/rush_spec.#{Process.pid}"
+		@sandbox_dir = "/tmp/rubyshell_spec.#{Process.pid}"
 		system "rm -rf #{@sandbox_dir}; mkdir -p #{@sandbox_dir}"
 
-		@box = Rush::Box.new('localhost')
+		@box = RubyShell::Box.new('localhost')
 	end
 
 	after do
@@ -13,12 +13,12 @@ describe Rush::Box do
 	end
 
 	it "looks up entries with [] syntax" do
-		@box['/'].should == Rush::Dir.new('/', @box)
+		@box['/'].should == RubyShell::Dir.new('/', @box)
 	end
 
 	it "looks up processes" do
 		@box.connection.should_receive(:processes).and_return([ { :pid => 123 } ])
-		@box.processes.should == [ Rush::Process.new({ :pid => 123 }, @box) ]
+		@box.processes.should == [ RubyShell::Process.new({ :pid => 123 }, @box) ]
 	end
 
 	it "executes bash commands" do
@@ -31,7 +31,7 @@ describe Rush::Box do
 		@box.bash('cmd', :user => 'user')
 	end
 
-	it "executes bash commands in the background, returning a Rush::Process" do
+	it "executes bash commands in the background, returning a RubyShell::Process" do
 		@box.connection.should_receive(:bash).with('cmd', nil, true, false).and_return(123)
 		@box.stub!(:processes).and_return([ mock('ps', :pid => 123) ])
 		@box.bash('cmd', :background => true).pid.should == 123

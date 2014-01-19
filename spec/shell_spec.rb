@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/base'
-require 'rush/shell'
+require 'rubyshell/shell'
 
-describe Rush::Shell do
+describe RubyShell::Shell do
 	before do
-		@shell = Rush::Shell.new
+		@shell = RubyShell::Shell.new
 	end
 
 	it "matches open path commands for readline tab completion" do

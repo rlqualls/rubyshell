@@ -6,17 +6,17 @@
 #
 # Example:
 #
-#   local = Rush::Box.new
+#   local = RubyShell::Box.new
 #   local['/etc/hosts'].contents
 #   local.processes
 #
-class Rush::Box
+class RubyShell::Box
 	attr_reader :host
 
 	# Instantiate a box.  No action is taken to make a connection until you try
 	# to perform an action.  If the box is remote, an ssh tunnel will be opened.
 	# Specify a username with the host if the remote ssh user is different from
-	# the local one (e.g. Rush::Box.new('user@host')).
+	# the local one (e.g. RubyShell::Box.new('user@host')).
 	def initialize(host='localhost')
 		@host = host
 	end
@@ -31,33 +31,33 @@ class Rush::Box
 
 	# Access / on the box.
 	def filesystem
-		Rush::Entry.factory('/', self)
+		RubyShell::Entry.factory('/', self)
 	end
 
 	# Look up an entry on the filesystem, e.g. box['/path/to/some/file'].
-	# Returns a subclass of Rush::Entry - either Rush::Dir if you specifiy
-	# trailing slash, or Rush::File otherwise.
+	# Returns a subclass of RubyShell::Entry - either RubyShell::Dir if you specifiy
+	# trailing slash, or RubyShell::File otherwise.
 	def [](key)
 		filesystem[key]
 	end
 
 	# Get the list of processes running on the box, not unlike "ps aux" in bash.
-	# Returns a Rush::ProcessSet.
+	# Returns a RubyShell::ProcessSet.
 	def processes
-		Rush::ProcessSet.new(
+		RubyShell::ProcessSet.new(
 			connection.processes.map do |ps|
-				Rush::Process.new(ps, self)
+				RubyShell::Process.new(ps, self)
 			end
 		)
 	end
 
 	# Execute a command in the standard unix shell.  Returns the contents of
-	# stdout if successful, or raises Rush::BashFailed with the output of stderr
+	# stdout if successful, or raises RubyShell::BashFailed with the output of stderr
 	# if the shell returned a non-zero value.  Options:
 	#
 	# :user => unix username to become via sudo
 	# :env => hash of environment variables
-	# :background => run in the background (returns Rush::Process instead of stdout)
+	# :background => run in the background (returns RubyShell::Process instead of stdout)
 	#
 	# Examples:
 	#
@@ -106,7 +106,7 @@ class Rush::Box
 	end
 
 	def make_connection    # :nodoc:
-		host == 'localhost' ? Rush::Connection::Local.new : Rush::Connection::Remote.new(host)
+		host == 'localhost' ? RubyShell::Connection::Local.new : RubyShell::Connection::Remote.new(host)
 	end
 
 	def ==(other)          # :nodoc:

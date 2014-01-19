@@ -1,7 +1,7 @@
-# A dir is a subclass of Rush::Entry that contains other entries.  Also known
+# A dir is a subclass of RubyShell::Entry that contains other entries.  Also known
 # as a directory or a folder.
 #
-# Dirs can be operated on with Rush::Commands the same as an array of files.
+# Dirs can be operated on with RubyShell::Commands the same as an array of files.
 # They also offer a square bracket accessor which can use globbing to get a
 # list of files.
 #
@@ -11,7 +11,7 @@
 #   dir['**/*.rb'].line_count
 #
 # In the interactive shell, dir.ls is a useful command.
-class Rush::Dir < Rush::Entry
+class RubyShell::Dir < RubyShell::Entry
 	def dir?
 		true
 	end
@@ -50,12 +50,12 @@ class Rush::Dir < Rush::Entry
 	alias_method :/, :[]
 
 	def find_by_name(name)    # :nodoc:
-		Rush::Entry.factory("#{full_path}/#{name}", box)
+		RubyShell::Entry.factory("#{full_path}/#{name}", box)
 	end
 
 	def find_by_glob(glob)    # :nodoc:
 		connection.index(full_path, glob).map do |fname|
-			Rush::Entry.factory("#{full_path}/#{fname}", box)
+			RubyShell::Entry.factory("#{full_path}/#{fname}", box)
 		end
 	end
 
@@ -78,7 +78,7 @@ class Rush::Dir < Rush::Entry
 	# Mostly for internal use.
 	def make_entries(filenames)
 		filenames.map do |fname|
-			Rush::Entry.factory("#{full_path}/#{fname}")
+			RubyShell::Entry.factory("#{full_path}/#{fname}")
 		end
 	end
 
@@ -120,7 +120,7 @@ class Rush::Dir < Rush::Entry
 		end
 	end
 
-	# Run a bash command starting in this directory.  Options are the same as Rush::Box#bash.
+	# Run a bash command starting in this directory.  Options are the same as RubyShell::Box#bash.
 	def bash(command, options={})
 		box.bash "cd #{quoted_path} && #{command}", options
 	end
@@ -152,7 +152,7 @@ class Rush::Dir < Rush::Entry
 		bash "git #{args.join(' ')}"
 	end
 
-	include Rush::Commands
+	include RubyShell::Commands
 
 	def entries
 		contents

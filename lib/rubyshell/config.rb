@@ -1,13 +1,13 @@
-# The config class accesses files in ~/.rush to load and save user preferences.
-class Rush::Config
+# The config class accesses files in ~/.rubyshell to load and save user preferences.
+class RubyShell::Config
 	DefaultPort = 7770
 
 	attr_reader :dir
 
-	# By default, reads from the dir ~/.rush, but an optional parameter allows
+	# By default, reads from the dir ~/.rubyshell, but an optional parameter allows
 	# using another location.
 	def initialize(location=nil)
-		@dir = Rush::Dir.new(location || "#{ENV['HOME']}/.rush")
+		@dir = RubyShell::Dir.new(location || "#{ENV['HOME']}/.rubyshell")
 		@dir.create
 	end
 
@@ -29,9 +29,9 @@ class Rush::Config
 	# Put aliases and your own functions here; it is the equivalent of .bashrc
 	# or .profile.
 	#
-	# Example ~/.rush/env.rb:
+	# Example ~/.rubyshell/env.rb:
 	#
-	#   server = Rush::Box.new('www@my.server')
+	#   server = RubyShell::Box.new('www@my.server')
 	#   myproj = home['projects/myproj/']
 	def env_file
 		dir['env.rb']
@@ -41,11 +41,11 @@ class Rush::Config
 		env_file.contents_or_blank
 	end
 
-	# Commands are mixed in to Array and Rush::Entry, alongside the default
-	# commands from Rush::Commands.  Any methods here should reference "entries"
+	# Commands are mixed in to Array and RubyShell::Entry, alongside the default
+	# commands from RubyShell::Commands.  Any methods here should reference "entries"
 	# to get the list of entries to operate on.
 	#
-	# Example ~/.rush/commands.rb:
+	# Example ~/.rubyshell/commands.rb:
 	#
 	#   def destroy_svn(*args)
 	#     entries.select { |e| e.name == '.svn' }.destroy
@@ -59,7 +59,7 @@ class Rush::Config
 	end
 
 	# Passwords contains a list of username:password combinations used for
-	# remote access via rushd.  You can fill this in manually, or let the remote
+	# remote access via rubyshelld.  You can fill this in manually, or let the remote
 	# connection publish it automatically.
 	def passwords_file
 		dir['passwords']
@@ -129,7 +129,7 @@ class Rush::Config
 		end
 	end
 
-	# ~/.rush/tunnels contains a list of previously created ssh tunnels.  The
+	# ~/.rubyshell/tunnels contains a list of previously created ssh tunnels.  The
 	# format is host:port, where port is the local port that the tunnel is
 	# listening on.
 	def tunnels_file

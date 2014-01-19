@@ -1,6 +1,6 @@
 # A class to hold permissions (read, write, execute) for files and dirs.
-# See Rush::Entry#access= for information on the public-facing interface.
-class Rush::Access
+# See RubyShell::Entry#access= for information on the public-facing interface.
+class RubyShell::Access
 	attr_accessor :user_can_read, :user_can_write, :user_can_execute
 	attr_accessor :group_can_read, :group_can_write, :group_can_execute
 	attr_accessor :other_can_read, :other_can_write, :other_can_execute
@@ -31,7 +31,7 @@ class Rush::Access
 	def apply(full_path)
 		FileUtils.chmod(octal_permissions, full_path)
 	rescue Errno::ENOENT
-		raise Rush::DoesNotExist, full_path
+		raise RubyShell::DoesNotExist, full_path
 	end
 
 	def to_hash
@@ -120,7 +120,7 @@ class Rush::Access
 	def extract_list(type, value, choices)
 		list = parts_from(value)
 		list.each do |value|
-			raise(Rush::BadAccessSpecifier, "Unrecognized #{type}: #{value}") unless choices.include? value
+			raise(RubyShell::BadAccessSpecifier, "Unrecognized #{type}: #{value}") unless choices.include? value
 		end
 	end
 

@@ -1,5 +1,5 @@
-# An array of these objects is returned by Rush::Box#processes.
-class Rush::Process
+# An array of these objects is returned by RubyShell::Box#processes.
+class RubyShell::Process
 	attr_reader :box, :pid, :uid, :parent_pid, :command, :cmdline, :mem, :cpu, :user
 
 	# params is a hash returned by the system-specific method of looking up the
@@ -29,7 +29,7 @@ class Rush::Process
 		end
 	end
 
-	# Returns the Rush::Process parent of this process.
+	# Returns the RubyShell::Process parent of this process.
 	def parent
 		box.processes.select { |p| p.pid == parent_pid }.first
 	end
@@ -54,6 +54,6 @@ class Rush::Process
 	end
 
 	def self.all
-		Rush::Box.new('localhost').processes
+		RubyShell::Box.new('localhost').processes
 	end
 end  

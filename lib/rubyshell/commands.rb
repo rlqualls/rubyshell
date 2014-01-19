@@ -1,5 +1,5 @@
-# The commands module contains operations against Rush::File entries, and is
-# mixed in to Rush::Entry and Array.  This means you can run these commands against a single
+# The commands module contains operations against RubyShell::File entries, and is
+# mixed in to RubyShell::Entry and Array.  This means you can run these commands against a single
 # file, a dir full of files, or an arbitrary list of files.
 #
 # Examples:
@@ -7,17 +7,17 @@
 #   box['/etc/hosts'].search /localhost/       # single file
 #   box['/etc/'].search /localhost/            # entire directory
 #   box['/etc/**/*.conf'].search /localhost/   # arbitrary list
-module Rush::Commands
-	# The entries command must return an array of Rush::Entry items.  This
+module RubyShell::Commands
+	# The entries command must return an array of RubyShell::Entry items.  This
 	# varies by class that it is mixed in to.
 	def entries
 		raise "must define me in class mixed in to for command use"
 	end
 
-	# Search file contents for a regular expression.  A Rush::SearchResults
+	# Search file contents for a regular expression.  A RubyShell::SearchResults
 	# object is returned.
 	def search(pattern)
-		results = Rush::SearchResults.new(pattern)
+		results = RubyShell::SearchResults.new(pattern)
 		entries.each do |entry|
 			if !entry.dir? and matches = entry.search(pattern)
 				results.add(entry, matches)

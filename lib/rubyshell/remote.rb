@@ -1,17 +1,17 @@
 require 'yaml'
 
-# This class it the mirror of Rush::Connection::Local.  A Rush::Box which is
+# This class it the mirror of RubyShell::Connection::Local.  A RubyShell::Box which is
 # not localhost has a remote connection, which it can use to convert method
 # calls to text suitable for transmission across the wire.
 #
 # This is an internal class that does not need to be accessed in normal use of
 # the rush shell or library.
-class Rush::Connection::Remote
+class RubyShell::Connection::Remote
 	attr_reader :host, :tunnel
 
 	def initialize(host)
 		@host = host
-		@tunnel = Rush::SshTunnel.new(host)
+		@tunnel = RubyShell::SshTunnel.new(host)
 	end
 
 	def write_file(full_path, contents)
@@ -87,8 +87,8 @@ class Rush::Connection::Remote
 	end
 
 	# Given a hash of parameters (converted by the method call on the connection
-	# object), send it across the wire to the RushServer listening on the other
-	# side.  Uses http basic auth, with credentials fetched from the Rush::Config.
+	# object), send it across the wire to the RubyShellServer listening on the other
+	# side.  Uses http basic auth, with credentials fetched from the RubyShell::Config.
 	def transmit(params)
 		ensure_tunnel
 
@@ -109,20 +109,20 @@ class Rush::Connection::Remote
 			process_result(res.code, res.body)
 		end
 	rescue EOFError
-		raise Rush::RushdNotRunning
+		raise RubyShell::RubyShelldNotRunning
 	end
 
 	# Take the http result of a transmit and raise an error, or return the body
 	# of the result when valid.
 	def process_result(code, body)
-		raise Rush::NotAuthorized if code == "401"
+		raise RubyShell::NotAuthorized if code == "401"
 
 		if code == "400"	
 			klass, message = parse_exception(body)
 			raise klass, "#{host}:#{message}"
 		end
 
-		raise Rush::FailedTransmit if code != "200"
+		raise RubyShell::FailedTransmit if code != "200"
 
 		body
 	end
@@ -131,7 +131,7 @@ class Rush::Connection::Remote
 	# first line and the message on the second.
 	def parse_exception(body)
 		klass, message = body.split("\n", 2)
-		raise "invalid exception class: #{klass}" unless klass.match(/^Rush::[A-Za-z]+$/)
+		raise "invalid exception class: #{klass}" unless klass.match(/^RubyShell::[A-Za-z]+$/)
 		klass = Object.module_eval(klass)
 		[ klass, message.strip ]
 	end
@@ -151,6 +151,6 @@ class Rush::Connection::Remote
 	end
 
 	def config
-		@config ||= Rush::Config.new
+		@config ||= RubyShell::Config.new
 	end
 end

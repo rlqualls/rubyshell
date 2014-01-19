@@ -6,7 +6,7 @@
 #   processes.find_by_pid(::Process.pid)
 #   processes.find_all_by_cmdline(/mongrel_rails/)
 #
-module Rush::FindBy
+module RubyShell::FindBy
 	def method_missing(meth, *args)
 		if m = meth.to_s.match(/^find_by_([a-z_]+)$/)
 			find_by(m[1], args.first)

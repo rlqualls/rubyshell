@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::FindBy do
+describe RubyShell::FindBy do
 	before do
 		class Foo
 			attr_accessor :bar

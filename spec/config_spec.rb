@@ -1,10 +1,10 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::Config do
+describe RubyShell::Config do
 	before do
-		@sandbox_dir = "/tmp/rush_config_spec.#{Process.pid}"
+		@sandbox_dir = "/tmp/rubyshell_config_spec.#{Process.pid}"
 		system "rm -rf #{@sandbox_dir}"
-		@config = Rush::Config.new(@sandbox_dir)
+		@config = RubyShell::Config.new(@sandbox_dir)
 	end
 
 	after do
@@ -16,7 +16,7 @@ describe Rush::Config do
 	end
 
 	it "can access the history file" do
-		@config.history_file.class.should == Rush::File
+		@config.history_file.class.should == RubyShell::File
 	end
 
 	it "saves the shell command history" do
@@ -51,7 +51,7 @@ describe Rush::Config do
 		@config.load_commands.should == ""
 	end
 
-	it "loads usernames and password for rushd" do
+	it "loads usernames and password for rubyshelld" do
 		system "echo 1:2 > #{@sandbox_dir}/passwords"
 		system "echo a:b >> #{@sandbox_dir}/passwords"
 		@config.passwords.should == { '1' => '2', 'a' => 'b' }

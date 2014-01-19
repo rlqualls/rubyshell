@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::Connection::Local do
+describe RubyShell::Connection::Local do
 	before do
-		@sandbox_dir = "/tmp/rush_spec.#{Process.pid}"
+		@sandbox_dir = "/tmp/rubyshell_spec.#{Process.pid}"
 		system "rm -rf #{@sandbox_dir}; mkdir -p #{@sandbox_dir}"
 
-		@con = Rush::Connection::Local.new
+		@con = RubyShell::Connection::Local.new
 	end
 
 	after do
@@ -74,7 +74,7 @@ describe Rush::Connection::Local do
 
 	it "receive -> set_access(full_path, user, group, permissions)" do
 		access = mock("access")
-		Rush::Access.should_receive(:from_hash).with(:action => 'set_access', :full_path => 'full_path', :user => 'joe').and_return(access)
+		RubyShell::Access.should_receive(:from_hash).with(:action => 'set_access', :full_path => 'full_path', :user => 'joe').and_return(access)
 
 		@con.should_receive(:set_access).with('full_path', access)
 		@con.receive(:action => 'set_access', :full_path => 'full_path', :user => 'joe')
@@ -116,7 +116,7 @@ describe Rush::Connection::Local do
 	end
 
 	it "receive -> unknown action exception" do
-		lambda { @con.receive(:action => 'does_not_exist') }.should raise_error(Rush::Connection::Local::UnknownAction)
+		lambda { @con.receive(:action => 'does_not_exist') }.should raise_error(RubyShell::Connection::Local::UnknownAction)
 	end
 
 	it "write_file writes contents to a file" do
@@ -141,7 +141,7 @@ describe Rush::Connection::Local do
 
 	it "file_contents raises DoesNotExist if the file does not exist" do
 		fname = "#{@sandbox_dir}/does_not_exist"
-		lambda { @con.file_contents(fname) }.should raise_error(Rush::DoesNotExist, fname)
+		lambda { @con.file_contents(fname) }.should raise_error(RubyShell::DoesNotExist, fname)
 	end
 
 	it "destroy to destroy a file or dir" do
@@ -187,11 +187,11 @@ describe Rush::Connection::Local do
 	end
 
 	it "copy raises DoesNotExist with source path if it doesn't exist or otherwise can't be accessed" do
-		lambda { @con.copy('/does/not/exist', '/tmp') }.should raise_error(Rush::DoesNotExist, '/does/not/exist')
+		lambda { @con.copy('/does/not/exist', '/tmp') }.should raise_error(RubyShell::DoesNotExist, '/does/not/exist')
 	end
 
 	it "copy raises DoesNotExist with destination path if it can't access the destination" do
-		lambda { @con.copy('/tmp', '/does/not/exist') }.should raise_error(Rush::DoesNotExist, '/does/not')
+		lambda { @con.copy('/tmp', '/does/not/exist') }.should raise_error(RubyShell::DoesNotExist, '/does/not')
 	end
 
 	it "read_archive to pull an archive of a dir into a byte stream" do
@@ -231,7 +231,7 @@ describe Rush::Connection::Local do
 	end
 
 	it "index raises DoesNotExist when the base path is invalid" do
-		lambda { @con.index('/does/not/exist', '*') }.should raise_error(Rush::DoesNotExist, '/does/not/exist')
+		lambda { @con.index('/does/not/exist', '*') }.should raise_error(RubyShell::DoesNotExist, '/does/not/exist')
 	end
 
 	it "stat gives file stats like size and timestamps" do
@@ -245,7 +245,7 @@ describe Rush::Connection::Local do
 
 	it "stat raises DoesNotExist if the entry does not exist" do
 		fname = "#{@sandbox_dir}/does_not_exist"
-		lambda { @con.stat(fname) }.should raise_error(Rush::DoesNotExist, fname)
+		lambda { @con.stat(fname) }.should raise_error(RubyShell::DoesNotExist, fname)
 	end
 
 	it "set_access invokes the access object" do
@@ -322,7 +322,7 @@ EOPS
 	end
 
 	it "executes a bash command, raising and error (with stderr as the message) when return value is nonzero" do
-		lambda { @con.bash("no_such_bin") }.should raise_error(Rush::BashFailed, /command not found/)
+		lambda { @con.bash("no_such_bin") }.should raise_error(RubyShell::BashFailed, /command not found/)
 	end
 
 	it "executes a bash command as another user using sudo" do

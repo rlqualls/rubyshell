@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::SshTunnel do
+describe RubyShell::SshTunnel do
 	before do
-		@tunnel = Rush::SshTunnel.new('spec.example.com')
+		@tunnel = RubyShell::SshTunnel.new('spec.example.com')
 		@tunnel.stub!(:config).and_return(mock_config_start)
 		@tunnel.stub!(:display)
 	end
@@ -91,7 +91,7 @@ describe Rush::SshTunnel do
 
 	it "ssh_tunnel_command request that the port be set" do
 		@tunnel.should_receive(:tunnel_options).at_least(:once).and_return(:local_port => nil)
-		lambda { @tunnel.ssh_tunnel_command }.should raise_error(Rush::SshTunnel::NoPortSelectedYet)
+		lambda { @tunnel.ssh_tunnel_command }.should raise_error(RubyShell::SshTunnel::NoPortSelectedYet)
 	end
 
 

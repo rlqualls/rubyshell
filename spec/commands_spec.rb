@@ -1,15 +1,15 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::Commands do
+describe RubyShell::Commands do
 	before do
-		@sandbox_dir = "/tmp/rush_spec.#{Process.pid}"
+		@sandbox_dir = "/tmp/rubyshell_spec.#{Process.pid}"
 		system "rm -rf #{@sandbox_dir}; mkdir -p #{@sandbox_dir}"
 
 		@filename = "test_file"
 		system "echo thing_to_find > #{@sandbox_dir}/#{@filename}"
 		system "echo dont_find_me > #{@sandbox_dir}/some_other_file"
 
-		@dir = Rush::Dir.new(@sandbox_dir)
+		@dir = RubyShell::Dir.new(@sandbox_dir)
 		@array = @dir.files
 	end
 
@@ -19,7 +19,7 @@ describe Rush::Commands do
 
 	it "searches a list of files" do
 		results = @dir.files.search(/thing_to_find/)
-		results.should be_kind_of(Rush::SearchResults)
+		results.should be_kind_of(RubyShell::SearchResults)
 		results.entries.should == [ @dir[@filename] ]
 		results.lines.should == [ "thing_to_find" ]
 	end

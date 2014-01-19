@@ -1,18 +1,18 @@
-require 'rush/shell'
+require 'rubyshell/shell'
 
-module Rush
+module RubyShell
 	# This is a class that can be embedded in other applications 
 	# rake tasks, utility scripts, etc
 	# 
-	# Delegates unknown method calls to a Rush::Shell instance
+	# Delegates unknown method calls to a RubyShell::Shell instance
 	class EmbeddableShell
 		attr_accessor :shell
 		def initialize(suppress_output = true)
-			self.shell = Rush::Shell.new
+			self.shell = RubyShell::Shell.new
 			shell.suppress_output = suppress_output
 		end
 		
-		# evalutes and unkown method call agains the rush shell
+		# evalutes and unkown method call agains the rubyshell shell
 		def method_missing(sym, *args, &block)
 			shell.execute sym.to_s
 			$last_res

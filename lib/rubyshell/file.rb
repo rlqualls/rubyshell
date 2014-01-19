@@ -1,6 +1,6 @@
-# Files are a subclass of Rush::Entry.  Most of the file-specific operations
+# Files are a subclass of RubyShell::Entry.  Most of the file-specific operations
 # relate to manipulating the file's contents, like search and replace.
-class Rush::File < Rush::Entry
+class RubyShell::File < RubyShell::Entry
 	def dir?
 		false
 	end
@@ -61,7 +61,7 @@ class Rush::File < Rush::Entry
 	# Return the file's contents, or if it doesn't exist, a blank string.
 	def contents_or_blank
 		contents
-	rescue Rush::DoesNotExist
+	rescue RubyShell::DoesNotExist
 		""
 	end
 
@@ -73,11 +73,11 @@ class Rush::File < Rush::Entry
 	# Return an array of lines, or an empty array if the file does not exist.
 	def lines_or_empty
 		lines
-	rescue Rush::DoesNotExist
+	rescue RubyShell::DoesNotExist
 		[]
 	end
 
-	include Rush::Commands
+	include RubyShell::Commands
 
 	def entries
 		[ self ]

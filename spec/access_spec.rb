@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::Access do
+describe RubyShell::Access do
 	before do
-		@access = Rush::Access.new
+		@access = RubyShell::Access.new
 	end
 
 	it "has roles: user, group, other" do
@@ -33,7 +33,7 @@ describe Rush::Access do
 	it "extract_list raises a BadAccessSpecifier when there is part not in the list of choices" do
 		lambda do
 			@access.extract_list('role', :user_bork, %w(user group))
-		end.should raise_error(Rush::BadAccessSpecifier, "Unrecognized role: bork")
+		end.should raise_error(RubyShell::BadAccessSpecifier, "Unrecognized role: bork")
 	end
 
 	it "sets one value in the matrix of permissions and roles" do
@@ -75,7 +75,7 @@ describe Rush::Access do
 	end
 
 	it "applies its settings to a file" do
-		file = "/tmp/rush_spec_#{Process.pid}"
+		file = "/tmp/rubyshell_spec_#{Process.pid}"
 		begin
 			system "rm -rf #{file}; touch #{file}; chmod 770 #{file}"
 			@access.user_can_read = true

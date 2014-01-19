@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::Process do
+describe RubyShell::Process do
 	before do
 		@pid = fork do
 			sleep 999
 		end
-		@process = Rush::Process.all.detect { |p| p.pid == @pid }
+		@process = RubyShell::Process.all.detect { |p| p.pid == @pid }
 	end
 
 	after do
@@ -14,15 +14,15 @@ describe Rush::Process do
 
 	if !RUBY_PLATFORM.match(/darwin/)   # OS x reports pids weird
 		it "knows all its child processes" do
-			parent = Rush::Process.all.detect { |p| p.pid == Process.pid }
+			parent = RubyShell::Process.all.detect { |p| p.pid == Process.pid }
 			parent.children.should == [ @process ]
 		end
 	end
 
 	it "gets the list of all processes" do
-		list = Rush::Process.all
+		list = RubyShell::Process.all
 		list.size.should > 5
-		list.first.should be_kind_of(Rush::Process)
+		list.first.should be_kind_of(RubyShell::Process)
 	end
 
 	it "knows the pid" do
@@ -54,12 +54,12 @@ describe Rush::Process do
 	end
 
 	it "knows the parent process" do
-		this = Rush::Box.new.processes.select { |p| p.pid == Process.pid }.first
+		this = RubyShell::Box.new.processes.select { |p| p.pid == Process.pid }.first
 		@process.parent.should == this
 	end
 
 	it "can kill itself" do
-		process = Rush.bash("sleep 30", :background => true)
+		process = RubyShell.bash("sleep 30", :background => true)
 		process.alive?.should be_true
 		process.kill
 		sleep 0.1
@@ -67,7 +67,7 @@ describe Rush::Process do
 	end
 
 	it "if box and pid are the same, process is equal" do
-		other = Rush::Process.new({ :pid => @process.pid }, @process.box)
+		other = RubyShell::Process.new({ :pid => @process.pid }, @process.box)
 		@process.should == other
 	end
 end

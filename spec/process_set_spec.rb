@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::ProcessSet do
+describe RubyShell::ProcessSet do
 	before do
 		@process = mock('process')
-		@set = Rush::ProcessSet.new([ @process ])
+		@set = RubyShell::ProcessSet.new([ @process ])
 	end
 
 	it "is Enumerable" do
@@ -19,7 +19,7 @@ describe Rush::ProcessSet do
 	end
 
 	it "is equal to sets with the same contents" do
-		@set.should == Rush::ProcessSet.new([ @process ])
+		@set.should == RubyShell::ProcessSet.new([ @process ])
 	end
 
 	it "is equal to arrays with the same contents" do

@@ -1,5 +1,5 @@
-# Rush mixes in Rush::Commands in order to allow operations on groups of
-# Rush::Entry items.  For example, dir['**/*.rb'] returns an array of files, so
+# RubyShell mixes in RubyShell::Commands in order to allow operations on groups of
+# RubyShell::Entry items.  For example, dir['**/*.rb'] returns an array of files, so
 # dir['**/*.rb'].destroy would destroy all the files specified.
 #
 # One cool tidbit: the array can contain entries anywhere, so you can create
@@ -7,13 +7,13 @@
 #
 #   [ box1['/var/log/access.log'] + box2['/var/log/access.log'] ].search /#{url}/
 class Array
-	include Rush::Commands
+	include RubyShell::Commands
 
 	def entries
 		self
 	end
 
-	include Rush::FindBy
+	include RubyShell::FindBy
 
-	include Rush::HeadTail
+	include RubyShell::HeadTail
 end

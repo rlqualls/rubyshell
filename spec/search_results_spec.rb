@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/base'
 
-describe Rush::SearchResults do
+describe RubyShell::SearchResults do
 	before do
-		@results = Rush::SearchResults.new(/pat/)
-		@file = Rush::File.new("file")
+		@results = RubyShell::SearchResults.new(/pat/)
+		@file = RubyShell::File.new("file")
 	end
 
 	it "returns its list of entries" do
@@ -22,7 +22,7 @@ describe Rush::SearchResults do
 	end
 
 	it "returns all lines for each entry in a flattened form" do
-		file2 = Rush::File.new("another file")
+		file2 = RubyShell::File.new("another file")
 		@results.add(@file, %w(a b))
 		@results.add(file2, %w(c d))
 		@results.lines.should == %w(a b c d)
