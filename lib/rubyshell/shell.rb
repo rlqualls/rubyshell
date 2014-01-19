@@ -1,6 +1,6 @@
 require 'readline'
 
-# RubyShell::Shell is used to create an interactive shell.  It is invoked by the rush binary.
+# RubyShell::Shell is used to create an interactive shell.  It is invoked by the rubyshell binary.
 module RubyShell
 	class Shell
 		attr_accessor :suppress_output
@@ -50,7 +50,7 @@ module RubyShell
 		# Run the interactive shell using readline.
 		def run
 			loop do
-				cmd = Readline.readline('rush> ')
+				cmd = Readline.readline('rubyshell> ')
 
 				finish if cmd.nil? or cmd == 'exit'
 				next if cmd == ""
