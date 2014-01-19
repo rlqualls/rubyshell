@@ -1,9 +1,10 @@
+require "rubyshell"
 require "date"
 
 Gem::Specification.new do |s|
   s.name = "rubyshell"
-  s.version = "0.0.0"
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.version = RubyShell::VERSION
+  s.required_rubygems_version = "1.3.5" 
   s.authors = ["Robert Qualls", "Adam Wiggins"]
   s.date = Date.today.to_s
   s.description = %q{A Ruby replacement for bash+ssh, providing both an interactive shell and a library.  Manage both local and remote unix systems from a single client.}
