@@ -18,6 +18,6 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/**"]
 
   s.add_development_dependency("rake", [">= 0.9.0"])
-  s.add_development_dependency("rspec", ["~> 1.2.0"])
+  s.add_development_dependency("rspec", ["~> 2.14.0"])
 end
 
