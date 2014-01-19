@@ -43,7 +43,8 @@ module RubyShell
 		rescue ::Exception => e
       # If not valid Ruby code, try to run it as an executable
       if which(cmd)
-        system(cmd)
+        args = cmd.split(' ')
+        system(*args)
       else
         puts "Exception #{e.class} -> #{e.message}"
         e.backtrace.each do |t|
@@ -55,6 +56,7 @@ module RubyShell
     # Determine if executable exists for cmd, taken from:
     # http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
     def which(cmd)
+      cmd = cmd.split(' ').first
       exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
       ENV['PATH'].split(::File::PATH_SEPARATOR).each do |path|
         exts.each { |ext|
