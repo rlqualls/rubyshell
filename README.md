@@ -8,6 +8,10 @@ Rubyshell is a UNIX shell written in Ruby based on rush by Adam Wiggins et al.
   2. Increase the blur between UNIX and Ruby. Right now we can't type "ls" into rush.
   3. Add support for plugins/customization
 
+## Status:
+
+Hopefully there will be a first release by March 2014.
+
 ## Credits
 
 Created by Robert Qualls
