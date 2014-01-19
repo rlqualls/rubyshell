@@ -39,13 +39,32 @@ module RubyShell
 			eval("_ = $last_res", @pure_binding)
 			print_result res
 		rescue RubyShell::Exception => e
-			puts "Exception #{e.class} -> #{e.message}"
+        puts "Exception #{e.class} -> #{e.message}"
 		rescue ::Exception => e
-			puts "Exception #{e.class} -> #{e.message}"
-			e.backtrace.each do |t|
-				puts "   #{::File.expand_path(t)}"
-			end
+      # If not valid Ruby code, try to run it as an executable
+      if which(cmd)
+        system(cmd)
+      else
+        puts "Exception #{e.class} -> #{e.message}"
+        e.backtrace.each do |t|
+          puts "   #{::File.expand_path(t)}"
+        end
+      end
 		end
+
+    # Determine if executable exists for cmd, taken from:
+    # http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
+    def which(cmd)
+      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+      ENV['PATH'].split(::File::PATH_SEPARATOR).each do |path|
+        exts.each { |ext|
+          exe = ::File.join(path, "#{cmd}#{ext}")
+          return exe if ::File.executable? exe
+        }
+      end
+      return nil
+    end
+    private :which
 
 		# Run the interactive shell using readline.
 		def run
