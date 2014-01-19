@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-require File.dirname(__FILE__) + '/../lib/rush'
-require File.dirname(__FILE__) + '/../lib/rush/shell'
+require File.dirname(__FILE__) + '/../lib/rubyshell'
+require File.dirname(__FILE__) + '/../lib/rubyshell/shell'
 
-shell = Rush::Shell.new
+shell = RubyShell::Shell.new
 
 if ARGV.size > 0
 	shell.execute ARGV.join(' ')
