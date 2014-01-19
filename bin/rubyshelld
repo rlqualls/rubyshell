@@ -1,7 +1,10 @@
 #!/usr/bin/env ruby
 
-require File.dirname(__FILE__) + '/../lib/rubyshell'
-require File.dirname(__FILE__) + '/../lib/rubyshell/server'
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
+require 'rubyshell'
+require 'rubyshell/server'
 
 RubyShellServer.new.run
 
