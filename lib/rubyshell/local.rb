@@ -2,11 +2,11 @@ require 'fileutils'
 require 'yaml'
 require 'timeout'
 
-# RubyShell::Box uses a connection object to execute all rush commands.  If the box
+# RubyShell::Box uses a connection object to execute all rubyshell commands.  If the box
 # is local, RubyShell::Connection::Local is created.  The local connection is the
-# heart of rush's internals.  (Users of the rush shell or library need never
+# heart of rush's internals.  (Users of the rubyshell shell or library need never
 # access the connection object directly, so the docs herein are intended for
-# developers wishing to modify rush.)
+# developers wishing to modify rubyshell.)
 #
 # The local connection has a series of methods which do the actual work of
 # modifying files, getting process lists, and so on.  RubyShellServer creates a
