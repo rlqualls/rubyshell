@@ -4,20 +4,20 @@ require 'rubyshell'
 require 'rubyshell/dsl'
 
 def mock_config(&block)
-	mock_config_start
-	block.call(config)
-	mock_config_end
+  mock_config_start
+  block.call(config)
+  mock_config_end
 end
 
 def mock_config_sandbox_dir
-	"/tmp/fake_config.#{Process.pid}"
+  "/tmp/fake_config.#{Process.pid}"
 end
 
 def mock_config_start
-	mock_config_cleanup
-	RubyShell::Config.new(mock_config_sandbox_dir)
+  mock_config_cleanup
+  RubyShell::Config.new(mock_config_sandbox_dir)
 end
 
 def mock_config_cleanup
-	FileUtils.rm_rf(mock_config_sandbox_dir)
+  FileUtils.rm_rf(mock_config_sandbox_dir)
 end
