@@ -3,8 +3,8 @@ require File.dirname(__FILE__) + '/base'
 describe RubyShell::SshTunnel do
 	before do
 		@tunnel = RubyShell::SshTunnel.new('spec.example.com')
-		@tunnel.stub!(:config).and_return(mock_config_start)
-		@tunnel.stub!(:display)
+		@tunnel.stub(:config).and_return(mock_config_start)
+		@tunnel.stub(:display)
 	end
 
 	after do

@@ -10,7 +10,7 @@ describe RubyShell do
 	end
 
 	it "fetches the launch dir (aka current working directory or pwd)" do
-		Dir.stub!(:pwd).and_return('/tmp')
+		Dir.stub(:pwd).and_return('/tmp')
 		RubyShell.launch_dir.should == RubyShell::Box.new['/tmp/']
 	end
 

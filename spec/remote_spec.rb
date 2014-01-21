@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/base'
 
-describe RubyShell::Connection::Local do
+describe RubyShell::Connection::Remote do
 	before do
 		@sandbox_dir = "/tmp/rubyshell_spec.#{Process.pid}"
 		system "rm -rf #{@sandbox_dir}; mkdir -p #{@sandbox_dir}"
@@ -107,7 +107,7 @@ describe RubyShell::Connection::Local do
 	end
 
 	it "an http result code of 400 raises the exception passed in the result body" do
-		@con.stub!(:parse_exception).and_return(RubyShell::DoesNotExist, "message")
+		@con.stub(:parse_exception).and_return(RubyShell::DoesNotExist, "message")
 		lambda { @con.process_result("400", "") }.should raise_error(RubyShell::DoesNotExist)
 	end
 
