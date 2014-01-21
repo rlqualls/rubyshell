@@ -50,7 +50,7 @@ module RubyShell
 
   # Create a box object for localhost.
   def self.box
-    @@box ||= RubyShell::Box.new
+    @box ||= RubyShell::Box.new
   end
 
   # Quote a path for use in backticks, say.
