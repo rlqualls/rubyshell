@@ -23,6 +23,6 @@ require 'rubyshell/box'
 require 'rubyshell/embeddable_shell'
 require 'rubyshell/dsl'
 
-include RubyShell::DSL
+include RubyShell
 
 
