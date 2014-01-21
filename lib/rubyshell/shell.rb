@@ -1,4 +1,5 @@
 require 'readline'
+require 'rubyshell/helpers'
 
 # RubyShell::Shell is used to create an interactive shell.  It is invoked by the rubyshell binary.
 module RubyShell
@@ -42,9 +43,10 @@ module RubyShell
         puts "Exception #{e.class} -> #{e.message}"
 		rescue ::Exception => e
       # If not valid Ruby code, try to run it as an executable
-      if which(cmd)
-        args = cmd.split(' ')
-        system(*args)
+      if Helpers.which(cmd)
+        # args = cmd.split(' ')
+        puts `#{cmd}`
+        # system(*args)
       else
         puts "Exception #{e.class} -> #{e.message}"
         e.backtrace.each do |t|

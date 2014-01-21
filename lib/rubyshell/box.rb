@@ -51,6 +51,23 @@ class RubyShell::Box
 		)
 	end
 
+  def ls
+    ::Dir.entries('.')
+  end
+
+  def open(*args)
+    system("xdg-open", *args)
+  end
+
+  def method_missing(method_sym, *args, &block)
+    command = method_sym.to_s
+    if Helpers.which(command)
+      Thread.new { system(command, *args) }
+    else
+      super
+    end
+  end
+
 	# Execute a command in the standard unix shell.  Returns the contents of
 	# stdout if successful, or raises RubyShell::BashFailed with the output of stderr
 	# if the shell returned a non-zero value.  Options:
