@@ -55,21 +55,6 @@ module RubyShell
       end
 		end
 
-    # Determine if executable exists for cmd, taken from:
-    # http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
-    def which(cmd)
-      cmd = cmd.split(' ').first
-      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
-      ENV['PATH'].split(::File::PATH_SEPARATOR).each do |path|
-        exts.each { |ext|
-          exe = ::File.join(path, "#{cmd}#{ext}")
-          return exe if ::File.executable? exe
-        }
-      end
-      return nil
-    end
-    private :which
-
 		# Run the interactive shell using readline.
     # Read multiple lines if it looks like mutliline code
 		def run
@@ -103,7 +88,7 @@ module RubyShell
     # Currently the @ends_needed logic is off-by-1:
     #   (should be > 0 not > 1) but works that way.
     def check_multiline(cmd)
-      if cmd =~ /do/ or cmd =~ /^def/ or cmd =~ /^class/ or cmd =~ /^module/
+      if cmd =~ /if/ or cmd =~/do/ or cmd =~ /^def/ or cmd =~ /^class/ or cmd =~ /^module/
         @ends_needed += 1
         cmd << ';' << Readline.readline('rubyshell>> ')
         if cmd =~ /end$/
