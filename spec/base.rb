@@ -1,10 +1,11 @@
+require 'simplecov'
+SimpleCov.start
+
 $LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
 require 'rspec'
 require 'rubyshell'
 require 'rubyshell/dsl'
 
-require 'simplecov'
-SimpleCov.start
 
 def mock_config(&block)
   mock_config_start
