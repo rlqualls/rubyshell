@@ -13,7 +13,7 @@ describe RubyShell::SshTunnel do
 
   it "ensure_tunnel sets everything up for the tunnel when one does not already exist" do
     @tunnel.should_receive(:push_credentials)
-    @tunnel.should_receive(:launch_rushd)
+    @tunnel.should_receive(:launch_rubyshelld)
     @tunnel.should_receive(:establish_tunnel)
     @tunnel.ensure_tunnel
   end
@@ -46,7 +46,7 @@ describe RubyShell::SshTunnel do
     @tunnel.next_available_port.should == 7772
   end
 
-  it "establishes a tunnel and saves it to ~/.rush/tunnels" do
+  it "establishes a tunnel and saves it to ~/.rubyshell/tunnels" do
     @tunnel.should_receive(:make_ssh_tunnel)
     @tunnel.should_receive(:port).exactly(0).times.and_return('7771')   # avoid infinite loop
     @tunnel.establish_tunnel
@@ -100,11 +100,11 @@ describe RubyShell::SshTunnel do
     @tunnel.push_credentials
   end
 
-  it "launches rushd on the remote host via ssh" do
+  it "launches rubyshelld on the remote host via ssh" do
     @tunnel.should_receive(:ssh) do |cmd|
-      cmd.should match(/rushd/)
+      cmd.should match(/rubyshelld/)
     end
-    @tunnel.launch_rushd
+    @tunnel.launch_rubyshelld
   end
 
   it "tunnel_alive? checks whether a tunnel is still up" do
