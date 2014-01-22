@@ -3,6 +3,9 @@ require 'rspec'
 require 'rubyshell'
 require 'rubyshell/dsl'
 
+require 'simplecov'
+SimpleCov.start
+
 def mock_config(&block)
   mock_config_start
   block.call(config)
