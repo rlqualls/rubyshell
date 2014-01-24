@@ -1,5 +1,7 @@
 # rubyshell -- manage your unix systems with pure Ruby
 
+[![Code Climate](https://codeclimate.com/github/rlqualls/rubyshell.png)](https://codeclimate.com/github/rlqualls/rubyshell)
+
 Rubyshell is a UNIX shell written in Ruby based on rush by Adam Wiggins et al.
 
 ## Objectives:
