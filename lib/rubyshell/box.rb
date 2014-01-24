@@ -62,7 +62,7 @@ class RubyShell::Box
   def method_missing(method_sym, *args, &block)
     command = method_sym.to_s
     if Helpers.which(command)
-      Thread.new { system(command, *args) }
+      system(command, *args)
     else
       super
     end
